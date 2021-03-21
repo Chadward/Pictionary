@@ -1,8 +1,34 @@
 'use strict';
 
 (function() {
-
     var socket = io();
+    
+    var usersList = document.getElementById('usersList')
+
+    //User joining room
+        // Get username and room from URL
+        const {username} = Qs.parse(location.search, {
+        ignoreQueryPrefix: true,
+        });
+    socket.emit('joinRoom', username);
+
+    // Get users
+        // Add users to DOM
+    function outputUsers(userss) {
+        usersList.innerHTML = '';        
+        var user_array = userss.users;         
+        user_array.forEach((user) => {
+          const li = document.createElement('li');
+          li.innerText = user.username;
+          usersList.appendChild(li);
+        });
+    }
+
+
+    socket.on('roomUsers', (users) => {
+        console.log(users);
+        outputUsers(users);
+    });
 
     //Timer
     var time = document.getElementById('time');

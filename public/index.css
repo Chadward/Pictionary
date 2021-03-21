@@ -42,7 +42,6 @@
   .color.blue { background-color: blue; }
   .color.yellow { background-color: yellow; }
 
-  #userList { display: none;}
   body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
   #container {box-sizing: border-box;}
   #chat {box-sizing: border-box; position: relative; left: 800px; padding: 5px; width: 300px; min-height: 800px; max-height: 800px;  background-color: lightgrey;}
