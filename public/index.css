@@ -1,0 +1,55 @@
+/**
+ * Fix user-agent
+ */
+
+ * {
+    box-sizing: border-box;
+  }
+  
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /**
+   * Canvas
+   */
+  
+  .whiteboard {
+    display: none; 
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    background-color: grey;
+  }
+  
+  .colors {
+    position: fixed;
+  }
+  
+  .color {
+    display: inline-block;
+    height: 48px;
+    width: 48px;
+  }
+  
+  .color.black { background-color: black; }
+  .color.red { background-color: red; }
+  .color.green { background-color: green; }
+  .color.blue { background-color: blue; }
+  .color.yellow { background-color: yellow; }
+
+  #userList { display: none;}
+  body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  #container {box-sizing: border-box;}
+  #chat {box-sizing: border-box; position: relative; left: 800px; padding: 5px; width: 300px; min-height: 800px; max-height: 800px;  background-color: lightgrey;}
+  #form {position: absolute; bottom: 0; right: 0; left: 0; background: rgba(0, 0, 0, 0.15); padding: 0.25rem; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
+  #input { display: fixed; bottom: 0; border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
+  #input:focus { outline: none; }
+  #form > button { background: #333; border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; }
+  #messages { list-style-type: none; margin: 0; padding: 0; max-height: 735px; overflow: scroll; overflow-x: hidden; overflow-y: hidden;}
+  #messages > li { padding: 0.5rem 1rem; }
+  #messages > li:nth-child(odd) { background: grey; color: white }

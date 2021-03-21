@@ -1,0 +1,40 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Socket Tetsing</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div id="container">
+        <!-- <div id="userList">
+            <h3>Online Users</h3>
+            <ul id='users'></ul>
+        </div> -->
+        <button id='timer'>start</button>
+        <h3 id='time'></h3>
+        <div>
+            <canvas class="whiteboard"></canvas>
+            <div class="colors">
+                <div class="color black"></div>
+                <div class="color red"></div>
+                <div class="color green"></div>
+                <div class="color blue"></div>
+                <div class="color yellow"></div>
+            </div>
+        </div>
+        <div id="chat">
+            <ul id="messages"></ul>
+            <form id="form" action="">
+                <input id="input" autocomplete="off" /><button style="display: none;">Send</button>
+            </form>
+        </div>  
+    </div>
+    
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/chat.js"></script>
+
+</body>
+</html>
+
