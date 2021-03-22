@@ -23,11 +23,73 @@
           usersList.appendChild(li);
         });
     }
-
-
     socket.on('roomUsers', (users) => {
-        console.log(users);
         outputUsers(users);
+    });
+
+    //Chat
+
+    var messages = document.getElementById('messages');
+    var form = document.getElementById('form');
+    var input = document.getElementById('input');
+
+    form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (input.value) {
+        socket.emit('chat message', input.value);
+        input.value = '';
+    }
+    });
+
+    socket.on('message', function(data) {
+    var item = document.createElement('li');
+    var strong = document.createElement('strong');
+    var main = document.createElement('span');
+    var colon = document.createElement('strong');
+
+    switch(data.type) {
+        case 0:
+          strong.textContent = data.username;
+          main.textContent = data.text;
+          colon.textContent = ': ';
+          item.appendChild(strong);
+          item.appendChild(colon);
+          item.appendChild(main);
+          item.style.color = 'black';
+          break;
+        case 1:
+          strong.textContent = data.text
+          item.appendChild(strong);
+          item.style.color = 'blue';
+          break;
+        case 2:
+          strong.textContent = data.username;
+          main.textContent = data.text;
+          item.appendChild(strong);
+          item.appendChild(main);
+          item.style.color = 'blue';
+          break;
+        case 3:
+          strong.textContent = data.username;
+          main.textContent = data.text;
+          item.appendChild(strong);
+          item.appendChild(main);
+          item.style.color = 'red';
+          break;
+        case 4:
+          strong.textContent = data.username;
+          var strong2 = document.createElement('strong');
+          strong2.textContexnt = data.text;
+          item.appendChild(strong);
+          item.appendChild(strong2);
+          item.style.color = 'lightgreen';
+          break;  
+        default:
+        item.style.color = 'black';
+        }
+
+    messages.appendChild(item);
+    messages.scrollTop = messages.scrollHeight;
     });
 
     //Timer

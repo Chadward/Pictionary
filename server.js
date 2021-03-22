@@ -9,6 +9,7 @@ const {
     userLeave,
     getRoomUsers
   } = require('./utils/users');
+const { userMessage } = require('./utils/messages');
 
 var timer = 15
 
@@ -23,10 +24,18 @@ io.on('connection', function(socket){
         io.emit('roomUsers', {
             users: getRoomUsers()
         });
+        socket.emit('message', userMessage(false, "Welcome to unending pain!", 1));
+        socket.broadcast.emit('message', userMessage(user.username, " has entered the depression!", 2))
   });
-    //whiteboard connection
-    socket.on('drawing', (data) => socket.broadcast.emit('drawing', data));
 
+  //chatroom
+  socket.on('chat message', msg => {
+    const user = getCurrentUser(socket.id);
+    io.emit('message', userMessage(user.username, msg, 0));
+  });
+
+  //whiteboard connection
+    socket.on('drawing', (data) => socket.broadcast.emit('drawing', data));
 
     //room drawing/guess timer
     socket.on('timer', () => {
@@ -46,18 +55,15 @@ io.on('connection', function(socket){
     //client disconnect
     socket.on('disconnect', () => {
         const user = userLeave(socket.id);
-    
-        if (user) {
-        //   io.to(user.room).emit(
-        //     'message',
-        //     formatMessage(botName, `${user.username} has left the chat`)
-        //   );
-    
+        if(user){
+          socket.broadcast.emit('message', userMessage(user.username, " has exited the depression!", 3));
+        
           // Send users and room info
           io.emit('roomUsers', {
             users: getRoomUsers()
           });
         }
+
       });
 
 })
