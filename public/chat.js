@@ -26,6 +26,26 @@
     socket.on('roomUsers', (users) => {
         outputUsers(users);
     });
+    
+    //setting drawer
+    socket.on('drawer', function(){
+        var word = document.getElementById('word');
+        var timer = document.getElementById('timer');
+        timer.style.display = 'flex';
+        word.style.display = 'flex';
+    });
+
+    socket.on('set permissions', function(){
+        socket.emit('permission');
+    })
+
+    //remove drawer
+    socket.on('not drawer', function(user){
+        var word = document.getElementById('word');
+        var timer = document.getElementById('timer');
+        timer.style.display = 'none';
+        word.style.display = 'none';
+    });
 
     //Chat
 
