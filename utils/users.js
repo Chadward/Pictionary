@@ -1,5 +1,4 @@
-const users = [];
-let drawer = [];
+let users = [];
 
 // Join user to chat
 function userJoin(id, username, drawer, correct) {
@@ -12,7 +11,7 @@ function userJoin(id, username, drawer, correct) {
 
 // Get current user
 function getCurrentUser(id) {
-  return users.find(user => user.id === id);
+  return users.find(user => user.id == id);
 }
 
 // User leaves chat
@@ -29,44 +28,32 @@ function getRoomUsers() {
   return users;
 }
 
-//getDrawer
+//isDrawer
 function isDrawer(){
-  if(drawer.length == 0)
-  {
-    return true;
+  for(let i = 0; i < users.length; i++){
+    if(users[i].drawer == true){
+      return false;
+    }
   }
-  else
-  {
-    return false;
-  } 
-}
-
-//setDrawer
-function setDrawer(user){
-  drawer.push(user);
-  //add drawer=true to users array?
+  return true;
 }
 
 //newDrawer
 function newDrawer(user){
   for(let i =0; i < users.length; i++){
     if(users[i].username == user.username){
-      users[i].drawer = false;
       if(users[i+1] != undefined){
-        drawer = [];
-        drawer = users[i+1];
         users[i+1].drawer = true;
-        return drawer;
+        users[i].drawer = false;
+        return users[i+1];
       }
-      else if(users[i+1] == undefined && users[0] != drawer[0]){
-        drawer = [];
-        drawer = users[0];
+      else if(users[i+1] == undefined && users[0] != users[i]){
         users[0].drawer = true;
-        return drawer;
+        users[i].drawer = false;
+        return users[0];
       }
       else{
-        drawer = [];
-        return drawer;
+        return false;
       }
     }
   }
@@ -74,15 +61,40 @@ function newDrawer(user){
 
 //getDrawer
 function getDrawer(){
-  return drawer;
+  for(let i = 0; i < users.length; i++){
+    if(users[i].drawer == true){
+      return users[i];
+    }
+  }
+  return false;
 }
+
+//check if all correctly answered
+function checkCorrect()
+{
+  for(let i = 0; i < users.length; i++){
+    if(users[i].correct == false){
+      return false;
+    }
+  }
+  return true;
+}
+
+//clear correct answers
+function clearCorrect(){
+  users.forEach(user => {
+    user.correct = false;
+  });
+}
+
 module.exports = {
   userJoin,
   getCurrentUser,
   userLeave,
   getRoomUsers,
   isDrawer,
-  setDrawer,
   newDrawer,
-  getDrawer
+  getDrawer,
+  clearCorrect,
+  checkCorrect
 };

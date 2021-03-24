@@ -16,10 +16,13 @@
         // Add users to DOM
     function outputUsers(userss) {
         usersList.innerHTML = '';        
-        var user_array = userss.users;         
+        var user_array = userss.users;     
+        console.log(user_array);    
         user_array.forEach((user) => {
           const li = document.createElement('li');
           li.innerText = user.username;
+          if(user.correct == true){li.style.color = 'green';}
+          if(user.drawer == true){li.style.color = 'red';}
           usersList.appendChild(li);
         });
     }
@@ -48,7 +51,6 @@
     });
 
     //Chat
-
     var messages = document.getElementById('messages');
     var form = document.getElementById('form');
     var input = document.getElementById('input');
@@ -97,13 +99,12 @@
           item.style.color = 'red';
           break;
         case 4:
-          strong.textContent = data.username;
-          var strong2 = document.createElement('strong');
-          strong2.textContexnt = data.text;
-          item.appendChild(strong);
-          item.appendChild(strong2);
-          item.style.color = 'lightgreen';
-          break;  
+            strong.textContent = data.username;
+            main.textContent = data.text;
+            item.appendChild(strong);
+            item.appendChild(main);
+            item.style.color = 'green';
+            break;  
         default:
         item.style.color = 'black';
         }

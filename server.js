@@ -9,21 +9,21 @@ const {
     userLeave,
     getRoomUsers,
     isDrawer,
-    setDrawer,
     newDrawer,
-    getDrawer
+    getDrawer,
+    clearCorrect,
+    checkCorrect
   } = require('./utils/users');
 
 const { 
-  currentDrawer, 
-  getWord,  
-  addCorrectUser, 
-  getCorrectUsers
+  getWord
 } = require('./utils/words');
   
 const { userMessage } = require('./utils/messages');
+const e = require('express');
 
-var timer = 10
+var timer = 2;
+var word = '';
 
 app.use(express.static(__dirname + '/public'));
 
@@ -32,20 +32,20 @@ io.on('connection', function(socket){
     //add user to user array
     socket.on('joinRoom', (username) => {
         //set a drawer
-        let user = null;   
-        //console.log(isDrawer());
+        let user = null;
         if(isDrawer())
         {
           user = userJoin(socket.id, username, true, false);
-          setDrawer(user);
           socket.emit('drawer', user);
+          word = getWord();
         }
         else{
           user = userJoin(socket.id, username, false, false);
         }
         //Send users info
         io.emit('roomUsers', {
-            users: getRoomUsers()
+            users: getRoomUsers(),
+            word: word
         });
         socket.emit('message', userMessage(false, "Welcome to unending pain!", 1));
         socket.broadcast.emit('message', userMessage(user.username, " has entered the depression!", 2));
@@ -54,7 +54,29 @@ io.on('connection', function(socket){
   //chatroom
   socket.on('chat message', msg => {
     const user = getCurrentUser(socket.id);
-    io.emit('message', userMessage(user.username, msg, 0));
+    if(user){
+    if(msg == word){
+      io.emit('message', userMessage(user.username, " guessed the word!", 4));
+      user.correct = true;
+          if(checkCorrect()){
+              const drawer = getDrawer();
+              const newDraw = newDrawer(drawer);
+              clearCorrect();
+              io.emit('roomUsers', {
+                users: getRoomUsers(),
+                word: word
+              });
+              io.emit('set permissions');
+          } else {
+          io.emit('roomUsers', {
+            users: getRoomUsers(),
+            word: word
+          });
+        }
+    } else {
+      io.emit('message', userMessage(user.username, msg, 0));
+    }
+  }
   });
 
   //whiteboard connection
@@ -64,23 +86,39 @@ io.on('connection', function(socket){
     socket.on('timer', () => {
         var counter = timer;
         var WinnerCountdown = setInterval(function(){
-        io.emit('counter', counter);
-        counter--
-        timer = counter;
-        if (counter === 0) {  
-          // io.emit('counter', "Times Up");
-          timer = 10;
-          clearInterval(WinnerCountdown);
-
+        if(timer == 'left early'){
+            timer = 2;
+            io.emit('counter', timer);
+            clearInterval(WinnerCountdown)
+        } else {
+          io.emit('counter', counter);
+          counter--
+          timer = counter;
+          if (counter == -1) {  
+            io.emit('counter', "Times Up");
+            timer = 2;
+            clearInterval(WinnerCountdown);
+            const user = getCurrentUser(socket.id);
+            if(user.drawer == true){
+              const newDraw = newDrawer(user);
+              io.emit('set permissions');
+            }
+          }
         }
       }, 1000);
     })
 
     //update permissions
     socket.on('permission', () => {
+      // clearCorrect();
       const user = getCurrentUser(socket.id);
-      if(user.drawer == true){
-          socket.emit('drawer');
+      if(user){
+        if(user.drawer == true){
+            socket.emit('drawer');
+        }
+        else{
+          socket.emit('not drawer');
+        }
       }
     })
 
@@ -91,13 +129,16 @@ io.on('connection', function(socket){
           if(user.drawer == true){
             const newDraw = newDrawer(user);
             io.emit('set permissions');
+            timer = 'left early';
+            //setTimeout(function(){ console.log('waited');}, 3000);
           }
           userLeave(socket.id);
           socket.broadcast.emit('message', userMessage(user.username, " has exited the depression!", 3));
 
           // Send users and room info
           io.emit('roomUsers', {
-            users: getRoomUsers()
+            users: getRoomUsers(),
+            word: word
           });
         }
       });
