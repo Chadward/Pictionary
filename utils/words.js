@@ -1,4 +1,4 @@
-const wordList = ['cat', 'dog', 'money', 'north america', 'ocean', 'banana'];
+const wordList = ['jew', 'non jew'];
 
 function getWord(){
     return wordList[Math.floor(Math.random() * wordList.length)].toLowerCase();

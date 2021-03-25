@@ -258,14 +258,13 @@
             case 2:
             case 3:
             case 4:
-            var selected = '';
             if(counter == 25){
                 word.innerText = '';
-                for(let i = 0; i < theWord.length; i++){
+                for(let i = 1; i <= theWord.length; i++){
                     if(hints.includes(i)){
-                        span.textContent += theWord[i] + ' ';
+                        span.textContent += theWord[i - 1] + ' ';
                     }
-                    else if(theWord[i] == ' '){
+                    else if(theWord[i - 1] == ' '){
                         span.textContent += "\u00A0" + "\u00A0";
                     }
                     else{
