@@ -44,11 +44,13 @@ function newDrawer(user){
     if(users[i].username == user.username){
       if(users[i+1] != undefined){
         users[i+1].drawer = true;
+        //users[i+1].correct = true;
         users[i].drawer = false;
         return users[i+1];
       }
       else if(users[i+1] == undefined && users[0] != users[i]){
         users[0].drawer = true;
+        //users[0].correct = true;
         users[i].drawer = false;
         return users[0];
       }
@@ -72,12 +74,20 @@ function getDrawer(){
 //check if all correctly answered
 function checkCorrect()
 {
+  let counter = 0;
   for(let i = 0; i < users.length; i++){
-    if(users[i].correct == false){
-      return false;
+    if(users[i].correct == true || users[i].drawer == true)
+    {
+      counter++;
     }
   }
-  return true;
+  if(counter == users.length)
+  {
+    return true;
+  }
+  else{
+    return false;
+  }
 }
 
 //clear correct answers

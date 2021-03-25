@@ -20,8 +20,6 @@ const {
 } = require('./utils/words');
   
 const { userMessage } = require('./utils/messages');
-const e = require('express');
-const { ifError } = require('assert');
 
 var timer = 45;
 var word = '';
@@ -88,12 +86,13 @@ io.on('connection', function(socket){
     socket.on('timer', () => {
       var counter = 45;
       clearInterval(WinnerCountdown);
+      timer = 45;
       var WinnerCountdown = setInterval(function(){
       if(timer == 'left early'){
           timer = 45;
           hintIndex = [];
-          io.emit('counter', timer);
           clearInterval(WinnerCountdown)
+          io.emit('counter', timer);
       } else {
         socket.broadcast.emit('hint', {counter: counter, word: word, hint: hintIndex})
         io.emit('counter', counter);
@@ -146,7 +145,7 @@ io.on('connection', function(socket){
             word = getWord();
             io.emit('set permissions');
             timer = 'left early';
-            //setTimeout(function(){ console.log('waited');}, 3000);
+            //setTimeout(function(){ timer = 45;}, 100);
           }
           userLeave(socket.id);
           socket.broadcast.emit('message', userMessage(user.username, " has exited the depression!", 3));
