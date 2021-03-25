@@ -43,7 +43,7 @@
   .color.yellow { background-color: yellow; }
 
   body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-  #word{display: none; background-color: cyan; height: 50px;}
+  #word{display: flex; background-color: cyan; height: 50px;}
   #timer{display: none;}
   /* CONATINER AND CHAT DISPLAY NONE REMOVE */
   #container {display: none; box-sizing: border-box;}

@@ -36,16 +36,17 @@ io.on('connection', function(socket){
         if(isDrawer())
         {
           user = userJoin(socket.id, username, true, false);
-          socket.emit('drawer', user);
+          //socket.emit('drawer', user);
           word = getWord();
+          io.emit('set permissions');
         }
         else{
           user = userJoin(socket.id, username, false, false);
+          io.emit('set permissions');
         }
         //Send users info
         io.emit('roomUsers', {
-            users: getRoomUsers(),
-            word: word
+            users: getRoomUsers()
         });
         socket.emit('message', userMessage(false, "Welcome to unending pain!", 1));
         socket.broadcast.emit('message', userMessage(user.username, " has entered the depression!", 2));
@@ -61,16 +62,15 @@ io.on('connection', function(socket){
           if(checkCorrect()){
               const drawer = getDrawer();
               const newDraw = newDrawer(drawer);
+              word = getWord();
               clearCorrect();
-              io.emit('roomUsers', {
-                users: getRoomUsers(),
-                word: word
-              });
               io.emit('set permissions');
+              io.emit('roomUsers', {
+                users: getRoomUsers()
+              });
           } else {
           io.emit('roomUsers', {
-            users: getRoomUsers(),
-            word: word
+            users: getRoomUsers()
           });
         }
     } else {
@@ -84,40 +84,46 @@ io.on('connection', function(socket){
 
     //room drawing/guess timer
     socket.on('timer', () => {
-        var counter = timer;
-        var WinnerCountdown = setInterval(function(){
-        if(timer == 'left early'){
-            timer = 2;
-            io.emit('counter', timer);
-            clearInterval(WinnerCountdown)
-        } else {
-          io.emit('counter', counter);
-          counter--
-          timer = counter;
-          if (counter == -1) {  
-            io.emit('counter', "Times Up");
-            timer = 2;
-            clearInterval(WinnerCountdown);
-            const user = getCurrentUser(socket.id);
-            if(user.drawer == true){
-              const newDraw = newDrawer(user);
-              io.emit('set permissions');
-            }
+      var counter = 2;
+      clearInterval(WinnerCountdown);
+      var WinnerCountdown = setInterval(function(){
+      if(timer == 'left early'){
+          timer = 2;
+          io.emit('counter', timer);
+          clearInterval(WinnerCountdown)
+      } else {
+        io.emit('counter', counter);
+        counter--
+        timer = counter;
+        if (counter == -1) {  
+          io.emit('counter', "Times Up");
+          timer = 2;
+          clearInterval(WinnerCountdown);
+          const user = getCurrentUser(socket.id);
+          if(user.drawer == true){
+            const newDraw = newDrawer(user);
+            word = getWord();
+            io.emit('set permissions');
+            io.emit('roomUsers', {
+              users: getRoomUsers()
+            });
           }
         }
-      }, 1000);
+      }
+    }, 1000);
     })
 
     //update permissions
     socket.on('permission', () => {
       // clearCorrect();
       const user = getCurrentUser(socket.id);
+      console.log(word);
       if(user){
         if(user.drawer == true){
-            socket.emit('drawer');
+            socket.emit('drawer', word);
         }
         else{
-          socket.emit('not drawer');
+          socket.emit('not drawer', word);
         }
       }
     })
@@ -128,6 +134,7 @@ io.on('connection', function(socket){
         if(user){
           if(user.drawer == true){
             const newDraw = newDrawer(user);
+            word = getWord();
             io.emit('set permissions');
             timer = 'left early';
             //setTimeout(function(){ console.log('waited');}, 3000);
@@ -137,8 +144,7 @@ io.on('connection', function(socket){
 
           // Send users and room info
           io.emit('roomUsers', {
-            users: getRoomUsers(),
-            word: word
+            users: getRoomUsers()
           });
         }
       });

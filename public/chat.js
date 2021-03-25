@@ -16,8 +16,7 @@
         // Add users to DOM
     function outputUsers(userss) {
         usersList.innerHTML = '';        
-        var user_array = userss.users;     
-        console.log(user_array);    
+        var user_array = userss.users;
         user_array.forEach((user) => {
           const li = document.createElement('li');
           li.innerText = user.username;
@@ -31,11 +30,15 @@
     });
     
     //setting drawer
-    socket.on('drawer', function(){
+    socket.on('drawer', (words) => {
         var word = document.getElementById('word');
         var timer = document.getElementById('timer');
         timer.style.display = 'flex';
         word.style.display = 'flex';
+        console.log('hi')
+        console.log(words);
+        word.innerText = '';
+        word.innerText = words;
     });
 
     socket.on('set permissions', function(){
@@ -43,11 +46,18 @@
     })
 
     //remove drawer
-    socket.on('not drawer', function(user){
+    socket.on('not drawer', (words) => {
         var word = document.getElementById('word');
         var timer = document.getElementById('timer');
+        var span = document.createElement('span');
         timer.style.display = 'none';
-        word.style.display = 'none';
+        word.innerText = '';
+        console.log(words.length);
+        for(let i = 0; i < words.length; i++){
+            span.textContent += '_ ';
+        }
+        word.appendChild(span);
+        console.log(word);
     });
 
     //Chat
