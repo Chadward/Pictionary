@@ -1,7 +1,7 @@
-const wordList = ['cats ssss', 'chad d', 'in n' , 'in', 'seven'];
+const wordList = ['cat', 'dog', 'money', 'north america', 'ocean', 'banana'];
 
 function getWord(){
-    return wordList[Math.floor(Math.random() * wordList.length)];
+    return wordList[Math.floor(Math.random() * wordList.length)].toLowerCase();
 }
 
 module.exports = { 

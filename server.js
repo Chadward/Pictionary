@@ -56,7 +56,7 @@ io.on('connection', function(socket){
   socket.on('chat message', msg => {
     const user = getCurrentUser(socket.id);
     if(user){
-    if(msg == word){
+    if(msg.toLowerCase() == word){
       io.emit('message', userMessage(user.username, " guessed the word!", 4));
       user.correct = true;
           if(checkCorrect()){
@@ -94,7 +94,43 @@ io.on('connection', function(socket){
           clearInterval(WinnerCountdown)
           io.emit('counter', timer);
       } else {
-        socket.broadcast.emit('hint', {counter: counter, word: word, hint: hintIndex})
+          let selected = '';
+          switch(word.length){
+              case 2:
+              case 3:
+              case 4:
+              if(counter == 25){
+                  while(hintIndex.includes(selected) || selected == '' || word[selected - 1] == ' ')
+                  {
+                      selected = Math.floor(Math.random() * Math.floor(word.length)) + 1;
+                  }
+                  hintIndex.push(selected);
+                }
+              break;
+
+              case 5:
+              case 6:
+              case 7:
+              if(counter == 35 || counter == 20){
+                  while(hintIndex.includes(selected) || selected == '' || word[selected - 1] == ' ')
+                  {
+                      selected = Math.floor(Math.random() * Math.floor(word.length)) + 1;
+                  }
+                  hintIndex.push(selected);
+                }
+              break;
+              
+              default:
+                  if(counter == 40 || counter == 27 || counter == 15){
+                      while(hintIndex.includes(selected) || selected == '' || word[selected - 1] == ' ')
+                      {
+                          selected = Math.floor(Math.random() * Math.floor(word.length)) + 1;
+                      }
+                      hintIndex.push(selected);
+                    }
+                  break;
+          }
+        socket.broadcast.emit('hint', { counter, theWord: word, hintIndex})
         io.emit('counter', counter);
         counter--;
         timer = counter;
