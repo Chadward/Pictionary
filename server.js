@@ -21,9 +21,11 @@ const {
   
 const { userMessage } = require('./utils/messages');
 const e = require('express');
+const { ifError } = require('assert');
 
-var timer = 2;
+var timer = 45;
 var word = '';
+var hintIndex = [];
 
 app.use(express.static(__dirname + '/public'));
 
@@ -84,20 +86,23 @@ io.on('connection', function(socket){
 
     //room drawing/guess timer
     socket.on('timer', () => {
-      var counter = 2;
+      var counter = 45;
       clearInterval(WinnerCountdown);
       var WinnerCountdown = setInterval(function(){
       if(timer == 'left early'){
-          timer = 2;
+          timer = 45;
+          hintIndex = [];
           io.emit('counter', timer);
           clearInterval(WinnerCountdown)
       } else {
+        socket.broadcast.emit('hint', {counter: counter, word: word, hint: hintIndex})
         io.emit('counter', counter);
-        counter--
+        counter--;
         timer = counter;
         if (counter == -1) {  
+          hintIndex = [];
           io.emit('counter', "Times Up");
-          timer = 2;
+          timer = 45;
           clearInterval(WinnerCountdown);
           const user = getCurrentUser(socket.id);
           if(user.drawer == true){
@@ -110,14 +115,18 @@ io.on('connection', function(socket){
           }
         }
       }
-    }, 1000);
+    }, 500); // set to 1000
+    })
+
+    //update hint
+    socket.on('push hint', (selected) => {
+      hintIndex.push(selected);
     })
 
     //update permissions
     socket.on('permission', () => {
       // clearCorrect();
       const user = getCurrentUser(socket.id);
-      console.log(word);
       if(user){
         if(user.drawer == true){
             socket.emit('drawer', word);

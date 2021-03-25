@@ -35,8 +35,6 @@
         var timer = document.getElementById('timer');
         timer.style.display = 'flex';
         word.style.display = 'flex';
-        console.log('hi')
-        console.log(words);
         word.innerText = '';
         word.innerText = words;
     });
@@ -52,12 +50,15 @@
         var span = document.createElement('span');
         timer.style.display = 'none';
         word.innerText = '';
-        console.log(words.length);
         for(let i = 0; i < words.length; i++){
+            if(words[i] == ' '){
+                span.textContent += "\u00A0" + "\u00A0";
+            }
+            else{
             span.textContent += '_ ';
+            }
         }
         word.appendChild(span);
-        console.log(word);
     });
 
     //Chat
@@ -138,6 +139,89 @@
         if(count > 10){time.style.color = ''}
         time.textContent = count;
       });
+    
+    //Hint
+    socket.on('hint', (update) => {
+        var word = document.getElementById('word');
+        var span = document.createElement('span');
+        switch(update.word.length){
+            case 2:
+            case 3:
+            case 4:
+            var selected = '';
+            if(update.counter == 25){
+                selected = Math.floor(Math.random() * update.word.length);
+                    if(update.word[selected] != ' ' && !update.hint.includes[selected])
+                    {
+                            word.innerText = '';
+                            for(let i = 0; i < update.word.length; i++){
+                                if( i == selected){ //update.hint.includes(i)
+                                    span.textContent += update.word[i] + ' ';
+                                }
+                                else if(update.word[i] == ' '){
+                                    span.textContent += "\u00A0" + "\u00A0";
+                                }
+                                else{
+                                    span.textContent += '_ ';
+                                }
+                            }
+                            console.log(span);
+                            word.appendChild(span);
+                            socket.emit('push hint', selected);
+                    }
+            }
+          break;
+            case 5:
+            case 6:
+            case 7:
+            if(update.counter == 35 || update.counter == 20){
+                let selected = '';
+                const hint = update.hint;
+                while(hint.includes(selected) || selected == '' || update.word[selected - 1] == ' ')
+                {
+                    selected = Math.floor(Math.random() * Math.floor(update.word.length)) + 1;
+                }
+                word.innerText = '';
+                for(let i = 1; i <= update.word.length; i++){
+                    if(i == selected || update.hint.includes(i)){
+                        span.textContent += update.word[i - 1] + ' ';
+                    }
+                    else if(update.word[i - 1] == ' '){
+                        span.textContent += "\u00A0" + "\u00A0";
+                    }
+                    else{
+                        span.textContent += '_ ';
+                    }
+                }
+                word.appendChild(span);
+                socket.emit('push hint', selected);
+            }
+          break;
+        default:
+            if(update.counter == 40 || update.counter == 27 || update.counter == 15){
+                let selected = '';
+                const hint = update.hint;
+                while(hint.includes(selected) || selected == '' || update.word[selected - 1] == ' ')
+                {
+                    selected = Math.floor(Math.random() * Math.floor(update.word.length)) + 1;
+                }
+                word.innerText = '';
+                for(let i = 1; i <= update.word.length; i++){
+                    if(i == selected || update.hint.includes(i)){
+                        span.textContent += update.word[i - 1] + ' ';
+                    }
+                    else if(update.word[i - 1] == ' '){
+                        span.textContent += "\u00A0" + "\u00A0";
+                    }
+                    else{
+                        span.textContent += '_ ';
+                    }
+                }
+                word.appendChild(span);
+                socket.emit('push hint', selected);
+            }
+        }
+    })
 
     //Whiteboard (drawing board)
     var canvas = document.getElementsByClassName('whiteboard')[0];  
