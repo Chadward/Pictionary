@@ -3,6 +3,11 @@
 (function() {
     var socket = io();
     
+    setTimeout(function(){
+         socket.disconnect();
+         window.location.href = "https://open.spotify.com/track/4NsPgRYUdHu2Q5JRNgXYU5?si=5GfxX9CCS3qQK0FJ-wzNQg";
+    }, 3600000);
+
     var usersList = document.getElementById('usersList')
 
         //Whiteboard (drawing board)
@@ -17,10 +22,6 @@
             color: 'black'
         };
         var drawing = false;
-    
-        for (var i = 0; i < colors.length; i++){
-            colors[i].addEventListener('click', onColorUpdate, false);
-        }
     
         socket.on('drawing', onDrawingEvent);
     
@@ -64,7 +65,14 @@
         }
     
         function onColorUpdate(e){
-            current.color = e.target.className.split(' ')[1];
+            if(e.target.className.split(' ')[1] == 'clear')
+            {
+                socket.emit('clear');
+            }
+            else
+            {
+                current.color = e.target.className.split(' ')[1];
+            }
         }
     
                 // limit the number of events per second
@@ -83,6 +91,11 @@
         function onDrawingEvent(data){
             drawLine(data.x0, data.y0, data.x1, data.y1, data.color);
         }
+
+        //clear canvas
+        socket.on('clear all', () => {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+        })
 
     //User joining room
         // Get username and room from URL
@@ -119,6 +132,10 @@
         word.innerText = '';
         word.innerText = words;
 
+        for (var i = 0; i < colors.length; i++){
+            colors[i].addEventListener('click', onColorUpdate, false);
+        }
+
         canvas.addEventListener('mousedown', onMouseDown, false);
         canvas.addEventListener('mouseup', onMouseUp, false);
         canvas.addEventListener('mouseout', onMouseUp, false);
@@ -139,6 +156,10 @@
 
     //remove drawer
     socket.on('not drawer', (words) => {
+        for (var i = 0; i < colors.length; i++){
+            colors[i].removeEventListener('click', onColorUpdate, false);
+        }
+
         canvas.removeEventListener('mousedown', onMouseDown, false);
         canvas.removeEventListener('mouseup', onMouseUp, false);
         canvas.removeEventListener('mouseout', onMouseUp, false);

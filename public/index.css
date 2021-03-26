@@ -41,6 +41,7 @@
   .color.green { background-color: green; }
   .color.blue { background-color: blue; }
   .color.yellow { background-color: yellow; }
+  .color.clear{ background-color: grey}
 
   body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
   #word{display: flex; background-color: cyan; height: 50px;}

@@ -172,6 +172,11 @@ io.on('connection', function(socket){
       }
     })
 
+    //clear canvas
+    socket.on('clear', () => {
+      io.emit('clear all');
+    })
+
     //client disconnect
     socket.on('disconnect', () => {
         const user = getCurrentUser(socket.id);
