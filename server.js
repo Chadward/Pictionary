@@ -68,6 +68,7 @@ io.on('connection', function(socket){
               io.emit('roomUsers', {
                 users: getRoomUsers()
               });
+              timer = 'left early';
           } else {
           io.emit('roomUsers', {
             users: getRoomUsers()
