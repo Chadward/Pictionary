@@ -198,7 +198,6 @@ io.on('connection', function(socket){
           });
         }
       });
-
 })
 
 http.listen(port, () => console.log('listening on port ' + port));

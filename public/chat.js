@@ -2,6 +2,7 @@
 
 (function() {
     var socket = io();
+    var my_username = '';
     
     setTimeout(function(){
          socket.disconnect();
@@ -102,6 +103,7 @@
         const {username} = Qs.parse(location.search, {
         ignoreQueryPrefix: true,
         });
+        my_username = username;
     socket.emit('joinRoom', username);
 
     // Get users
@@ -111,7 +113,15 @@
         var user_array = userss.users;
         user_array.forEach((user) => {
           const li = document.createElement('li');
-          li.innerText = user.username;
+          if(user.username == my_username){
+            var strong = document.createElement('strong');
+            strong.textContent = user.username;
+            li.appendChild(strong);
+    
+          }
+          else{
+            li.innerText = user.username;
+          }
           if(user.correct == true){li.style.color = 'green';}
           if(user.drawer == true){li.style.color = 'red';}
           usersList.appendChild(li);
@@ -151,7 +161,6 @@
 
     socket.on('set permissions', function(){
         socket.emit('permission');
-        context.clearRect(0, 0, canvas.width, canvas.height);
     })
 
     //remove drawer
@@ -159,6 +168,8 @@
         for (var i = 0; i < colors.length; i++){
             colors[i].removeEventListener('click', onColorUpdate, false);
         }
+
+        drawing = false;
 
         canvas.removeEventListener('mousedown', onMouseDown, false);
         canvas.removeEventListener('mouseup', onMouseUp, false);
@@ -257,7 +268,8 @@
     var timer = document.getElementById('timer');
 
     function startTimer(){
-        socket.emit('timer')
+        socket.emit('timer');
+        socket.emit('clear');
     }
 
     timer.addEventListener("click", startTimer);
