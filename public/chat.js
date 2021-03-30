@@ -4,10 +4,29 @@
     var socket = io();
     var my_username = '';
     
-    setTimeout(function(){
-         socket.disconnect();
-         window.location.href = "https://open.spotify.com/track/4NsPgRYUdHu2Q5JRNgXYU5?si=5GfxX9CCS3qQK0FJ-wzNQg";
-    }, 3600000);
+    //inactivity remove (40 minutes => sweden by C418)
+    var inactivityTime = function () {
+        var lime;
+        window.onload = resetTimer;
+        // DOM Events
+        document.onmousemove = resetTimer;
+        document.onkeypress = resetTimer;
+    
+        function logout() {
+            socket.disconnect();
+            window.location.href = "https://open.spotify.com/track/4NsPgRYUdHu2Q5JRNgXYU5?si=5GfxX9CCS3qQK0FJ-wzNQg";
+        }
+    
+        function resetTimer() {
+            clearTimeout(lime);
+            lime = setTimeout(logout, 2400000)
+            // 1000 milliseconds = 1 second
+        }
+    };
+
+    window.onload = function() {
+        inactivityTime(); 
+      }
 
     var usersList = document.getElementById('usersList')
 
@@ -156,7 +175,9 @@
         canvas.addEventListener('touchend', onMouseUp, false);
         canvas.addEventListener('touchcancel', onMouseUp, false);
         canvas.addEventListener('touchmove', throttle(onMouseMove, 10), false);
-        
+
+        modal.style.display = "block";
+        modalContent.innerText = words;
     });
 
     socket.on('set permissions', function(){
@@ -270,6 +291,7 @@
     function startTimer(){
         socket.emit('timer');
         socket.emit('clear');
+        modal.style.display = 'none';
     }
 
     timer.addEventListener("click", startTimer);
@@ -344,4 +366,44 @@
             }
         }
     })
+
+    //MODAL LOGIC
+        var modalContent = document.getElementById('modalContent');
+        // Get the modal
+        var modal = document.getElementById("myModal");
+        // Get the button that opens the modal
+        var btn = document.getElementById("myBtn");
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks the button, open the modal 
+        btn.onclick = function() {
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+        modal.style.display = "none";
+        console.log('whatsfasfdd')
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        // window.onclick = function(event) {
+        // if (event.target == modal) {
+        //     modal.style.display = "none";
+        // }
+        // }
+
+    //MODAL CALLS
+    socket.on('modal drawer', (word) => {
+
+    })
+
+    socket.on('modal all', () => {
+
+    })
+
+    socket.on('modal disconnect', () => {
+
+    })
+
 })();

@@ -3,6 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Socket Tetsing</title>
   <link rel="stylesheet" href="index.css">
 </head>
@@ -12,10 +13,13 @@
             <canvas class="whiteboard"></canvas>
             <div class="colors">
                 <div class="color black"></div>
+                <div class="color white"></div>
                 <div class="color red"></div>
+                <div class="color orange"></div>
+                <div class="color yellow"></div>
                 <div class="color green"></div>
                 <div class="color blue"></div>
-                <div class="color yellow"></div>
+                <div class="color purple"></div>
                 <div class="color clear"></div>
             </div>
         </div>
@@ -34,10 +38,24 @@
 
     <div>
         <h1 id='word'></h1>
-        <button id='timer'>start</button>
         <h3 id='time'>45</h3>
     </div>
 
+        <!-- Trigger/Open The Modal -->
+        <button id="myBtn">Open Modal</button>
+
+        <!-- The Modal -->
+        <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <!-- <span class="close">&times;</span> -->
+            <p id="modalContent"></p>
+            <button id='timer'>start</button>
+
+        </div>
+
+        </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.10.0/qs.min.js" integrity="sha512-aTKlYRb1QfU1jlF3k+aS4AqTpnTXci4R79mkdie/bp6Xm51O5O3ESAYhvg6zoicj/PD6VYY0XrYwsWLcvGiKZQ==" crossorigin="anonymous"></script>
   <script src="/socket.io/socket.io.js"></script>

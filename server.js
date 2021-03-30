@@ -163,9 +163,11 @@ io.on('connection', function(socket){
     socket.on('permission', () => {
       // clearCorrect();
       const user = getCurrentUser(socket.id);
+      console.log(user);
       if(user){
         if(user.drawer == true){
             socket.emit('drawer', word);
+            socket.emit('modal drawer', word);
         }
         else{
           socket.emit('not drawer', word);
@@ -181,6 +183,7 @@ io.on('connection', function(socket){
     //client disconnect
     socket.on('disconnect', () => {
         const user = getCurrentUser(socket.id);
+        //console.log(user);
         if(user){
           if(user.drawer == true){
             const newDraw = newDrawer(user);
