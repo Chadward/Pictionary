@@ -32,8 +32,8 @@
 
         //Whiteboard (drawing board)
         var canvas = document.getElementsByClassName('whiteboard')[0];  
-        canvas.width = 800;
-        canvas.height = 800;
+        canvas.width = 600;
+        canvas.height = 600;
     
         var colors = document.getElementsByClassName('color');
         var context = canvas.getContext('2d');
@@ -55,7 +55,9 @@
             context.closePath();
     
             if (!emit) { return; }
-    
+            var w = canvas.width;
+            var h = canvas.height;
+
             socket.emit('drawing', {
             x0: x0,
             y0: y0,
@@ -111,6 +113,15 @@
         function onDrawingEvent(data){
             drawLine(data.x0, data.y0, data.x1, data.y1, data.color);
         }
+
+        //canvas resizability
+        // function onResize() {
+        //     canvas.width = window.innerWidth;
+        //     canvas.height = window.innerHeight;
+        // }
+
+        // window.addEventListener('resize', onResize, false);
+        // onResize();
 
         //clear canvas
         socket.on('clear all', () => {
@@ -175,17 +186,23 @@
         canvas.addEventListener('touchend', onMouseUp, false);
         canvas.addEventListener('touchcancel', onMouseUp, false);
         canvas.addEventListener('touchmove', throttle(onMouseMove, 10), false);
-
-        modal.style.display = "block";
-        modalContent.innerText = words;
     });
+
+    socket.on('modal display', (data) => {
+        if(data.user == my_username){
+            modal.style.display = "block";
+            modalContent.innerText = data.word;
+            }
+        });
 
     socket.on('set permissions', function(){
         socket.emit('permission');
     })
 
     //remove drawer
-    socket.on('not drawer', (words) => {
+    socket.on('not drawer', (data) => {
+        var words = data.word;
+        var drawer = data.drawer;
         for (var i = 0; i < colors.length; i++){
             colors[i].removeEventListener('click', onColorUpdate, false);
         }
@@ -210,14 +227,8 @@
         input.style.display = 'flex';
         timer.style.display = 'none';
         word.innerText = '';
-        for(let i = 0; i < words.length; i++){
-            if(words[i] == ' '){
-                span.textContent += "\u00A0" + "\u00A0";
-            }
-            else{
-            span.textContent += '_ ';
-            }
-        }
+
+        span.textContent = "Waiting on " + drawer + " to start!"
         word.appendChild(span);
     });
 
@@ -313,6 +324,18 @@
             case 2:
             case 3:
             case 4:
+            if(counter == 60){
+                for(let i = 0; i < theWord.length; i++){
+                    if(theWord[i] == ' '){
+                        span.textContent += "\u00A0" + "\u00A0";
+                    }
+                    else{
+                    span.textContent += '_ ';
+                    }
+                }
+                word.innerText = '';
+                word.appendChild(span);
+            }
             if(counter == 25){
                 word.innerText = '';
                 for(let i = 1; i <= theWord.length; i++){
@@ -332,6 +355,18 @@
             case 5:
             case 6:
             case 7:
+            if(counter == 60){
+                for(let i = 0; i < theWord.length; i++){
+                    if(theWord[i] == ' '){
+                        span.textContent += "\u00A0" + "\u00A0";
+                    }
+                    else{
+                    span.textContent += '_ ';
+                    }
+                }
+                word.innerText = '';
+                word.appendChild(span);
+            }
             if(counter == 35 || counter == 20){
                 word.innerText = '';
                 for(let i = 1; i <= theWord.length; i++){
@@ -349,6 +384,18 @@
             }
           break;
         default:
+            if(counter == 60){
+                for(let i = 0; i < theWord.length; i++){
+                    if(theWord[i] == ' '){
+                        span.textContent += "\u00A0" + "\u00A0";
+                    }
+                    else{
+                    span.textContent += '_ ';
+                    }
+                }
+                word.innerText = '';
+                word.appendChild(span);
+            }
             if(counter == 40 || counter == 27 || counter == 15){
                 word.innerText = '';
                 for(let i = 1; i <= theWord.length; i++){
@@ -369,41 +416,17 @@
 
     //MODAL LOGIC
         var modalContent = document.getElementById('modalContent');
-        // Get the modal
         var modal = document.getElementById("myModal");
-        // Get the button that opens the modal
-        var btn = document.getElementById("myBtn");
-        // Get the <span> element that closes the modal
-        var span = document.getElementsByClassName("close")[0];
 
-        // When the user clicks the button, open the modal 
-        btn.onclick = function() {
-        }
+        var modal2 = document.getElementById("myModal2")
+        var modalContent2 = document.getElementById('modalContent2');
 
-        // When the user clicks on <span> (x), close the modal
-        span.onclick = function() {
-        modal.style.display = "none";
-        console.log('whatsfasfdd')
-        }
+        socket.on('modal', (users) => {
+            var the_users = users.users;
 
-        // When the user clicks anywhere outside of the modal, close it
-        // window.onclick = function(event) {
-        // if (event.target == modal) {
-        //     modal.style.display = "none";
-        // }
-        // }
-
-    //MODAL CALLS
-    socket.on('modal drawer', (word) => {
-
-    })
-
-    socket.on('modal all', () => {
-
-    })
-
-    socket.on('modal disconnect', () => {
-
-    })
+            modal2.style.display = "block";
+            modalContent2.innerText = 'oh you wish you had this hairline';
+            setTimeout(function(){modal2.style.display = "none"}, 2500);
+        })
 
 })();

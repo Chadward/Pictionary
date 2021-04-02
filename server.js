@@ -21,7 +21,7 @@ const {
   
 const { userMessage } = require('./utils/messages');
 
-var timer = 45;
+var timer = 60;
 var word = '';
 var hintIndex = [];
 
@@ -31,15 +31,17 @@ io.on('connection', function(socket){
 
     //add user to user array
     socket.on('joinRoom', (username) => {
-        //set a drawer
+        //set a drawer if there isn't one
         let user = null;
         if(isDrawer())
         {
           user = userJoin(socket.id, username, true, false);
-          //socket.emit('drawer', user);
-          word = getWord();
           io.emit('set permissions');
-        }
+          word = getWord();
+          io.emit('modal display', {
+              user: getDrawer().username,
+              word
+            });        }
         else{
           user = userJoin(socket.id, username, false, false);
           io.emit('set permissions');
@@ -60,14 +62,23 @@ io.on('connection', function(socket){
       io.emit('message', userMessage(user.username, " guessed the word!", 4));
       user.correct = true;
           if(checkCorrect()){
-              const drawer = getDrawer();
-              const newDraw = newDrawer(drawer);
-              word = getWord();
-              clearCorrect();
-              io.emit('set permissions');
-              io.emit('roomUsers', {
+              io.emit('modal', {
                 users: getRoomUsers()
               });
+              setTimeout(function(){
+                const drawer = getDrawer();
+                const newDraw = newDrawer(drawer);
+                clearCorrect();
+                io.emit('set permissions');
+                word = getWord();
+                io.emit('modal display', {
+                    user: getDrawer().username,
+                    word
+                  });
+                io.emit('roomUsers', {
+                  users: getRoomUsers()
+                });
+              }, 3000);
               timer = 'left early';
           } else {
           io.emit('roomUsers', {
@@ -85,12 +96,12 @@ io.on('connection', function(socket){
 
     //room drawing/guess timer
     socket.on('timer', () => {
-      var counter = 45;
+      var counter = 60;
       clearInterval(WinnerCountdown);
-      timer = 45;
+      timer = 60;
       var WinnerCountdown = setInterval(function(){
       if(timer == 'left early'){
-          timer = 45;
+          timer = 60;
           hintIndex = [];
           clearInterval(WinnerCountdown)
           io.emit('counter', timer);
@@ -135,20 +146,30 @@ io.on('connection', function(socket){
         io.emit('counter', counter);
         counter--;
         timer = counter;
-        if (counter == -1) {  
+        if (counter == -1) {
+          io.emit('modal', {
+            users: getRoomUsers()
+          });
           hintIndex = [];
           io.emit('counter', "Times Up");
-          timer = 45;
-          clearInterval(WinnerCountdown);
-          const user = getCurrentUser(socket.id);
-          if(user.drawer == true){
-            const newDraw = newDrawer(user);
-            word = getWord();
-            io.emit('set permissions');
-            io.emit('roomUsers', {
-              users: getRoomUsers()
-            });
-          }
+          timer = 60;
+          clearInterval(WinnerCountdown);  
+          setTimeout(function(){
+            const user = getCurrentUser(socket.id);
+            if(user.drawer == true){
+              const newDraw = newDrawer(user);
+              io.emit('set permissions');
+              word = getWord();
+              io.emit('modal display', {
+                  user: getDrawer().username,
+                  word
+                });              
+              io.emit('roomUsers', {
+                users: getRoomUsers()
+              });
+            }
+          }, 2500)
+
         }
       }
     }, 500); // set to 1000
@@ -163,14 +184,15 @@ io.on('connection', function(socket){
     socket.on('permission', () => {
       // clearCorrect();
       const user = getCurrentUser(socket.id);
-      console.log(user);
       if(user){
         if(user.drawer == true){
             socket.emit('drawer', word);
-            socket.emit('modal drawer', word);
         }
         else{
-          socket.emit('not drawer', word);
+          socket.emit('not drawer', {
+            word,
+            drawer: getDrawer().username
+          });
         }
       }
     })
@@ -183,12 +205,15 @@ io.on('connection', function(socket){
     //client disconnect
     socket.on('disconnect', () => {
         const user = getCurrentUser(socket.id);
-        //console.log(user);
         if(user){
-          if(user.drawer == true){
+          if(user.drawer == true || !checkCorrect()){
             const newDraw = newDrawer(user);
-            word = getWord();
             io.emit('set permissions');
+            word = getWord();
+            io.emit('modal display', {
+                user: getDrawer().username,
+                word
+              });
             timer = 'left early';
             //setTimeout(function(){ timer = 45;}, 100);
           }
