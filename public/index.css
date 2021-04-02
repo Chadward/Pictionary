@@ -17,7 +17,6 @@
    */
   
   .whiteboard {
-
     background-color: grey;
   }
   
@@ -46,7 +45,8 @@
   #word{display: flex; background-color: cyan; height: 50px;}
   #timer{display: none;}
   /* CONATINER AND CHAT DISPLAY NONE REMOVE */
-  #container {display: flex; box-sizing: border-box;}
+  #onlineUsers {width: 200px; min-width: 200px;}
+  #container { display: flex; box-sizing: border-box;}
   #chat { box-sizing: border-box; position: relative; left: 0px; padding: 5px; width: 300px; min-height: 800px; max-height: 800px;  background-color: lightgrey;}
   #form {position: absolute; bottom: 0; right: 0; left: 0; background: rgba(0, 0, 0, 0.15); padding: 0.25rem; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
   #input { display: fixed; bottom: 0; border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }

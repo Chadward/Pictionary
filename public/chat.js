@@ -31,7 +31,7 @@
     var usersList = document.getElementById('usersList')
 
         //Whiteboard (drawing board)
-        var canvas = document.getElementsByClassName('whiteboard')[0];  
+        var canvas = document.getElementsByClassName('whiteboard')[0];
         canvas.width = 600;
         canvas.height = 600;
     
@@ -47,8 +47,8 @@
     
         function drawLine(x0, y0, x1, y1, color, emit){
             context.beginPath();
-            context.moveTo(x0, y0);
-            context.lineTo(x1, y1);
+            context.moveTo(x0 - canvas.offsetLeft, y0 - canvas.offsetTop);
+            context.lineTo(x1 - canvas.offsetLeft, y1 - canvas.offsetTop);
             context.strokeStyle = color;
             context.lineWidth = 4;
             context.stroke();
@@ -69,7 +69,7 @@
     
         function onMouseDown(e){
             drawing = true;
-            current.x = e.pageX||e.touches[0].pageX;
+            current.x = e.pageX ||e.touches[0].pageX;
             current.y = e.pageY||e.touches[0].pageY;
         }
     
@@ -84,6 +84,8 @@
             drawLine(current.x, current.y, e.pageX||e.touches[0].pageX, e.pageY||e.touches[0].pageY, current.color, true);
             current.x = e.pageX||e.touches[0].pageX;
             current.y = e.pageY||e.touches[0].pageY;
+            // console.log(current.x);
+            // console.log(current.y);
         }
     
         function onColorUpdate(e){
