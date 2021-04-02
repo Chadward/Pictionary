@@ -12,7 +12,8 @@ const {
     newDrawer,
     getDrawer,
     clearCorrect,
-    checkCorrect
+    checkCorrect,
+    checkCorrectWithout
   } = require('./utils/users');
 
 const { 
@@ -24,6 +25,7 @@ const { userMessage } = require('./utils/messages');
 var timer = 60;
 var word = '';
 var hintIndex = [];
+var pointcounter = 1;
 
 app.use(express.static(__dirname + '/public'));
 
@@ -35,7 +37,7 @@ io.on('connection', function(socket){
         let user = null;
         if(isDrawer())
         {
-          user = userJoin(socket.id, username, true, false);
+          user = userJoin(socket.id, username, true, false, 0);
           io.emit('set permissions');
           word = getWord();
           io.emit('modal display', {
@@ -43,7 +45,7 @@ io.on('connection', function(socket){
               word
             });        }
         else{
-          user = userJoin(socket.id, username, false, false);
+          user = userJoin(socket.id, username, false, false, 0);
           io.emit('set permissions');
         }
         //Send users info
@@ -61,8 +63,27 @@ io.on('connection', function(socket){
     if(msg.toLowerCase() == word){
       io.emit('message', userMessage(user.username, " guessed the word!", 4));
       user.correct = true;
+          switch(pointcounter){
+            case 1:
+              user.points += 100;
+            break;
+
+            case 2:
+              user.points += 85;
+            break;
+              
+            case 3:
+              user.points += 70;
+            break;
+
+            default:
+              user.points += 50;
+            break;
+          }
+          pointcounter++;
           if(checkCorrect()){
-              io.emit('modal', {
+            pointcounter = 1;
+            io.emit('modal', {
                 users: getRoomUsers()
               });
               setTimeout(function(){
@@ -206,7 +227,9 @@ io.on('connection', function(socket){
     socket.on('disconnect', () => {
         const user = getCurrentUser(socket.id);
         if(user){
-          if(user.drawer == true || !checkCorrect()){
+          if(user.drawer == true){ //checkCorrectWithout(user) but breaks...
+            // when last user without correct answer quits pre-emptively; lets multiple drawers get selected.
+            // AS WELL I NEED TO MAKE IT SO CORRECT ANSWERS LEAD TO INABILITY TO TYPE OR SOMETHING EQUIVILENT SO PEOPLE CANNOT FINESE THE POINT SYSTEM.
             const newDraw = newDrawer(user);
             io.emit('set permissions');
             word = getWord();
@@ -215,7 +238,6 @@ io.on('connection', function(socket){
                 word
               });
             timer = 'left early';
-            //setTimeout(function(){ timer = 45;}, 100);
           }
           userLeave(socket.id);
           socket.broadcast.emit('message', userMessage(user.username, " has exited the depression!", 3));

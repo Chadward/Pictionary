@@ -143,16 +143,36 @@
     function outputUsers(userss) {
         usersList.innerHTML = '';        
         var user_array = userss.users;
+        //sort user array by score
+            // var keys = []
+            // let a_user;
+            // for(a_user in user_array){
+            //     keys.push(a_user);
+            // }
+            // keys.sort();
+            // var length = keys.length
+            // let k;
+            // let new_user_array = []
+            // for(let i = 0; i < length; i++){
+            //     k = keys[i];
+            //     new_user_array.push(user_array[k]);
+            // }
+            // console.log(new_user_array);
+        user_array.sort(function(a, b) {
+            return b.points - a.points;
+        });
+        console.log(user_array);
+
         user_array.forEach((user) => {
           const li = document.createElement('li');
           if(user.username == my_username){
             var strong = document.createElement('strong');
             strong.textContent = user.username;
+            strong.textContent += user.points;
             li.appendChild(strong);
-    
           }
           else{
-            li.innerText = user.username;
+            li.innerText = user.username + user.points;
           }
           if(user.correct == true){li.style.color = 'green';}
           if(user.drawer == true){li.style.color = 'red';}

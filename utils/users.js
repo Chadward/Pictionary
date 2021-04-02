@@ -1,8 +1,8 @@
 let users = [];
 
 // Join user to chat
-function userJoin(id, username, drawer, correct) {
-  const user = { id, username, drawer, correct};
+function userJoin(id, username, drawer, correct, points) {
+  const user = { id, username, drawer, correct, points};
 
   users.push(user);
 
@@ -90,6 +90,31 @@ function checkCorrect()
   }
 }
 
+//check if all correctly answered omit a user
+function checkCorrectWithout(user)
+{
+  let the_users = users;
+  for(let i = 0; i < the_users.length; i++){
+    if(the_users[i].username == user.username){
+      the_users = the_users.slice(i, 1);
+    }
+  }
+  let counter = 0;
+  for(let i = 0; i < the_users.length; i++){
+    if(the_users[i].correct == true || the_users[i].drawer == true)
+    {
+      counter++;
+    }
+  }
+  if(counter == the_users.length)
+  {
+    return true;
+  }
+  else{
+    return false;
+  }
+}
+
 //clear correct answers
 function clearCorrect(){
   users.forEach(user => {
@@ -106,5 +131,6 @@ module.exports = {
   newDrawer,
   getDrawer,
   clearCorrect,
-  checkCorrect
+  checkCorrect,
+  checkCorrectWithout
 };
