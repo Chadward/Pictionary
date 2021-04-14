@@ -1,0 +1,269 @@
+* {
+    box-sizing: border-box;
+  }
+
+  html {
+    overflow: scroll;
+}
+::-webkit-scrollbar {
+    width: 0;  /* Remove scrollbar space */
+    background: transparent;  /* Optional: just make scrollbar invisible */
+}
+  html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background-color: rgb(3, 3, 3);
+    background-image: url(./background.jpg);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    padding-top: 25px;
+  }
+  
+  /**
+   * Canvas
+   */
+  
+  .whiteboard {
+    background-color: #115173;
+    margin-top: 5px;
+    width: 500px;
+    height: 500px;
+  }
+  
+  .colors {
+    position: relative;
+    bottom: 60px;
+    padding-left: 10px;
+  }
+
+  .color {
+    display: inline-block;
+    height: 45px;
+    width: 45px;
+    margin: 0 2px 0 2px;
+  }
+
+  .mainContent {
+    display: flex;
+    height: 500px;
+    box-sizing: border-box;
+  }
+
+  div[class='color clear'] {
+    background: repeating-linear-gradient(
+      45deg,
+      #ffffff,
+      #ffffff 10px,
+      #ff0000 10px,
+      #ff0000 15px
+    );  
+  }
+  
+  #userListTitle {
+    width: 100%;
+    background-color: #115173;
+    color: #ffd700;
+    text-align: center;
+    margin: 0;
+    height: 35px;
+    padding-top: 5px;
+  }
+
+  #usersList {
+    padding: 0px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    max-height: 453px; 
+    overflow: scroll; 
+    overflow-x: hidden; 
+  }
+
+  .wordtimer{
+    background-color: #022c43;
+    height: 50px;
+    width: 1010px;
+    display: flex;
+    box-sizing: border-box;
+  }
+  #time_wrap{padding-top: 10px; text-align: center; height: 100%; border-color: #115173; border-style: solid; border-width: 4px; width: 50px; background-color: #053f5e;}
+  #time{margin: 0; padding: 0; color: #ffd700;}
+  #word_wrap{height: 100%; width: 600px; margin: auto auto auto 10px; padding-top: 15px;}
+  #word{margin: 0; padding: 0; color: #ffd700;}
+
+  .color.black { background-color: black; }
+  .color.white { background-color: white; }
+  .color.red { background-color: red; }
+  .color.orange { background-color: orange; }
+  .color.yellow { background-color: yellow; }
+  .color.green { background-color: green; }
+  .color.blue { background-color: blue; }
+  .color.purple { background-color: purple; }
+  .color.clear{ background-color: grey;}
+
+  body {margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+  #timer{
+      color: black;
+      border: 4px solid #053f5e;
+      margin: 40px auto auto auto;
+      background-color: #115173;
+      border-radius: 25px;
+      padding: 18px 36px;
+      display: inline-block;
+      font-size: 14px;
+      letter-spacing: 1px;
+      cursor: pointer;
+      box-shadow: inset 0 0 0 0 #D80286;
+      -webkit-transition: ease-out 0.4s;
+      -moz-transition: ease-out 0.4s;
+      transition: ease-out 0.4s;
+  }
+
+  #timer:hover{
+    box-shadow: inset 400px 0 0 0 #ffd700;
+    }
+
+  #timer:focus {outline:0;}
+
+
+
+  /* CONATINER AND CHAT DISPLAY NONE REMOVE */
+  #onlineUsers {margin-right: 5px; margin-top: 5px; height: 500px; min-height: 500px; width: 250px; min-width: 250px; background-color: #053f5e;}
+  #container {margin: 0px auto auto auto; min-width:1010px; width: 1010px; height: 555px; max-height: 555px; display: flex; flex-direction: column; box-sizing: border-box;}
+  #chat {margin-left: 5px; margin-top: 5px; box-sizing: border-box; position: relative; left: 0px; width: 250px; min-width: 250px; min-height: 500px; max-height: 500px;  background-color: #053f5e;}
+  #form {position: absolute; bottom: 0; right: 0; left: 0; background: rgba(0, 0, 0, 0.15); padding: 0.25rem; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
+  #input { display: fixed; bottom: 0; border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; background-color: #115173;}
+  #input:focus { outline: none; }
+  #form > button { background: #333; border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; }
+  #messages {box-sizing: border-box; list-style-type: none; margin: 0; padding: 0; max-height: 453px; overflow: scroll; overflow-x: hidden; overflow-y: hidden;}
+  #messages > li { padding: 0.5rem 1rem; }
+  #messages > li:nth-child(odd) { background: #115173; color: white }
+  #messages > li::selection {
+    background: #ffd700;
+    color: black;
+  }
+
+  /* MODAL CSS */
+    /* The Modal (background) */
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed; /* Stay in place */
+      z-index: 1; /* Sit on top */
+      padding-top: 100px; /* Location of the box */
+      left: 0;
+      top: 0;
+      width: 100%; /* Full width */
+      height: 100%; /* Full height */
+      overflow: auto; /* Enable scroll if needed */
+      background-color: rgb(0,0,0); /* Fallback color */
+      background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+
+    #modalContent{
+      color: #ffd700;
+    }
+
+    /* Modal Content */
+    .modal-content {
+      background-color: #053f5e;
+      border-style: solid;
+      border-color: #022c43;
+      border-width: 15px;
+      border-radius: 50%;
+      margin: auto;
+      padding: 20px;
+      width: 300px;
+      height: 300px;
+
+      text-align: center;
+
+      box-shadow: 10px -10px  rgba(0,0,0,0.6);
+      -moz-box-shadow: 10px -10px  rgba(0,0,0,0.6);
+      -webkit-box-shadow: 10px -10px  rgba(0,0,0,0.6);
+      -o-box-shadow: 10px -10px  rgba(0,0,0,0.6);
+      border-radius:100px;
+    }
+
+     /* MODAL GUESSER CSS */
+    /* The Modal (background) */
+    .modal2 {
+      display: none; /* Hidden by default */
+      position: fixed; /* Stay in place */
+      z-index: 1; /* Sit on top */
+      padding-top: 100px; /* Location of the box */
+      left: 0;
+      top: 0;
+      width: 100%; /* Full width */
+      height: 100%; /* Full height */
+      overflow: auto; /* Enable scroll if needed */
+      background-color: rgb(0,0,0); /* Fallback color */
+      background-color: rgba(0,0,0,0); /* Black w/ opacity */
+    }
+
+    #modalContent2{
+      color: #ffd700;
+    }
+
+    /* Modal Content */
+    .modal-content2 {
+      background-color: #053f5e;
+      border-style: solid;
+      border-color: #022c43;
+      border-width: 15px;
+      border-radius: 50%;
+      margin: auto;
+      padding: 20px;
+      width: 400px;
+      height: 150px;
+
+      text-align: center;
+
+      box-shadow: 10px -10px  rgba(0,0,0,0.6);
+      -moz-box-shadow: 10px -10px  rgba(0,0,0,0.6);
+      -webkit-box-shadow: 10px -10px  rgba(0,0,0,0.6);
+      -o-box-shadow: 10px -10px  rgba(0,0,0,0.6);
+      border-radius:100px;
+    }
+
+
+    /* media queries **/
+    @media only screen and (max-width: 450px) {
+      /* .whiteboard {
+        width: 200px;
+        height: 200px;
+      }
+
+      .color {
+        display: inline-block;
+        height: 20px;
+        width: 20px;
+      }
+
+      #onlineUsers {
+        display: none;
+      }
+
+      #container {
+          display: flex;
+          flex-direction: column;
+      } */
+      
+      html {    
+        background-color: rgb(3, 3, 3);
+        background-image: url(./background.jpg);
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+      }
+
+      body {
+        display: none;
+      }
+
+    }

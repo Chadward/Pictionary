@@ -1,0 +1,79 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Socket Tetsing</title>
+  <link rel="stylesheet" href="chat.css">
+</head>
+<body>
+    <div id="container">
+        <div class='wordtimer'>
+            <div id='word_wrap'>
+                <h3 id='word'></h3>                
+            </div>
+            <div id='time_wrap'>
+                <h3 id='time'>60</h3>
+            </div>
+        </div>
+        <div class='mainContent'>
+            <div id="onlineUsers">
+                <h3 id='userListTitle'>Online Users</h3>
+                <ul id='usersList'></ul>
+            </div>
+            <div>
+                <canvas class="whiteboard"></canvas>
+                <div class="colors">
+                    <div class="color black"></div>
+                    <div class="color white"></div>
+                    <div class="color red"></div>
+                    <div class="color orange"></div>
+                    <div class="color yellow"></div>
+                    <div class="color green"></div>
+                    <div class="color blue"></div>
+                    <div class="color purple"></div>
+                    <div class="color clear"></div>
+                </div>
+            </div>
+
+            <div id="chat">
+                <ul id="messages"></ul>
+                <form id="form" action="">
+                    <input id="input" autocomplete="off" /><button style="display: none;">Send</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+ <!-- The Modal -->
+        <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <p>Your word/phrase is: </p>
+            <h1 id="modalContent"></h1>
+            <button id='timer'>Start</button>
+
+        </div>
+
+        </div>
+
+ <!-- The Modal FOR GUESSERS-->
+ <div id="myModal2" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content2">
+        <span>The correct answer is: </span>
+        <h2 id="modalContent2"></h2>
+    </div>
+
+    </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.10.0/qs.min.js" integrity="sha512-aTKlYRb1QfU1jlF3k+aS4AqTpnTXci4R79mkdie/bp6Xm51O5O3ESAYhvg6zoicj/PD6VYY0XrYwsWLcvGiKZQ==" crossorigin="anonymous"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/chat.js"></script>
+
+</body>
+</html>
+
