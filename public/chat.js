@@ -44,7 +44,6 @@
         var drawing = false;
     
         socket.on('drawing', onDrawingEvent);
-
         function drawLine(x0, y0, x1, y1, color, emit){
             context.beginPath();
             context.moveTo(x0 - canvas.offsetLeft, y0 - canvas.offsetTop);
