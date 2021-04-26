@@ -2,16 +2,16 @@
     box-sizing: border-box;
   }
 
-  html {
-    overflow: scroll;
-}
 ::-webkit-scrollbar {
     width: 0;  /* Remove scrollbar space */
+    height: 0;  /* Remove scrollbar space */
     background: transparent;  /* Optional: just make scrollbar invisible */
-}
+  }
+
   html, body {
     height: 100%;
     width: 100%;
+    overflow: scroll;
     margin: 0;
     padding: 0;
   }
@@ -22,7 +22,8 @@
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
-    padding-top: 25px;
+    padding-top: 3%;
+
   }
   
   /**
